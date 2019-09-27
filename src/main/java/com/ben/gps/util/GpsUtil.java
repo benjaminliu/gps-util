@@ -17,6 +17,14 @@ public class GpsUtil {
     private static Ellipsoid defaultEllipsoid = Ellipsoid.WGS84;
     private static GeodeticCalculator geodeticCalculator = new GeodeticCalculator();
 
+    public static Ellipsoid getDefaultEllipsoid() {
+        return defaultEllipsoid;
+    }
+
+    public static void setDefaultEllipsoid(Ellipsoid defaultEllipsoid) {
+        GpsUtil.defaultEllipsoid = defaultEllipsoid;
+    }
+
     /**
      * 计算2个点之间的距离(单位米)和方位角
      **/
