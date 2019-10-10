@@ -30,4 +30,12 @@ public class GpsUtilTest {
 
     }
 
+    @Test
+    public void test2() {
+        int v = GpsUtil.calcVerticalDistanceMeter(38.291667, 116.625,
+                39.2, 116.58,
+                38.41643772714718, 115.17304956288433);
+
+        System.out.println(v);
+    }
 }

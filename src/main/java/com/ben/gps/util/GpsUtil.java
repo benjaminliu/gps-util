@@ -17,14 +17,6 @@ public class GpsUtil {
     private static Ellipsoid defaultEllipsoid = Ellipsoid.WGS84;
     private static GeodeticCalculator geodeticCalculator = new GeodeticCalculator();
 
-    public static Ellipsoid getDefaultEllipsoid() {
-        return defaultEllipsoid;
-    }
-
-    public static void setDefaultEllipsoid(Ellipsoid defaultEllipsoid) {
-        GpsUtil.defaultEllipsoid = defaultEllipsoid;
-    }
-
     /**
      * 计算2个点之间的距离(单位米)和方位角
      **/
@@ -87,7 +79,7 @@ public class GpsUtil {
     /**
      * 计算三角形顶点对应底边的垂直距离，Vertex是顶点，另外2个点连起来就是底边
      **/
-    public static double calcVerticalDistanceMeter(double latVertex, double lngVertex, double lat1, double lng1, double lat2, double lng2) {
+    public static int calcVerticalDistanceMeter(double latVertex, double lngVertex, double lat1, double lng1, double lat2, double lng2) {
         int side1 = calcDistanceMeter(latVertex, lngVertex, lat1, lng1);
         int side2 = calcDistanceMeter(latVertex, lngVertex, lat2, lng2);
         int baseSide = calcDistanceMeter(lat1, lng1, lat2, lng2);
@@ -97,10 +89,17 @@ public class GpsUtil {
 
     /**
      * 计算三角形顶点到对应的边的垂直距离，side1,side2,baseSide 是3条边，  计算baseSide边的高（就是baseSide边对应的顶点到baseSide的距离）
-     * 用海伦公式算
+     * 参数单位是米，先转成公里，防止溢出， 然后结果再转成米
+     * 用海伦公式算,
      **/
-    public static int calcVerticalDistance(int side1, int side2, int baseSide) {
-        int p = (side1 + side2 + baseSide) / 2;
+    public static int calcVerticalDistance(double side1, double side2, double baseSide) {
+
+        //转成米，防止溢出
+        side1 /= 1000;
+        side2 /= 1000;
+        baseSide /= 1000;
+
+        double p = (side1 + side2 + baseSide) / 2;
         if (p == 0)
             return 0;
 
@@ -108,7 +107,9 @@ public class GpsUtil {
         if (area == 0)
             return 0;
 
-        return (int) (2 * area / baseSide);
+        //转成公里,分子的2和分母的1000可以约去，
+//        return (int) ((2 * area / baseSide) * 1000);
+        return (int) (2000 * area / baseSide);
     }
 
     /**
